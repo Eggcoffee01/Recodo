@@ -16,7 +16,7 @@ function showPosition(position) {
 
 function getCityName(lat, lon) {
   fetch(
-    `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`
+    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`
   )
     .then(function (r) {
       return r.json();
