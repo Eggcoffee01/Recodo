@@ -40,7 +40,7 @@ function loadCity() {
     locationText.style.width = `${locationLength * 20}px`;
     locationText.style.left = `${(1920 - locationLength * 20) / 2 + 10}px`;
     locationLogo.src = "src/resources/location2.png";
-    locationLogo.style.left = `${(1920 - locationLength * 20) / 2 + 20}px`;
+    locationLogo.style.left = `${(1920 - locationLength * 20) / 2}px`;
   } else {
     getLocation();
   }
