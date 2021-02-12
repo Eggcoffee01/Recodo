@@ -228,16 +228,17 @@ function loadRecordLs() {
   }
 }
 function createRecord(recordingNull) {
-  if (recordedTime) {
+  if (recordedTime && recordingTime == 0) {
     for (let i = 0; i < recordedTime.length; i++) {
       console.log(recordedTime[i].text, recordLs.text);
       if (recordedTime[i].text === recordLs.text) {
-        console.log(recordLs.time, recordedTime[i].time);
-        recordLs.time -= recordedTime[i].time;
+        recordingTime = recordedTime[i].time;
+        ls.setItem("recording", recordingTime);
         recordedTime.splice(i, 1);
-        i--;
       }
     }
+    const stringRecordedLs = JSON.stringify(recordedTime);
+    ls.setItem("recorded", stringRecordedLs);
   }
   const span = document.createElement("span"),
     textSpan = document.createElement("span"),
