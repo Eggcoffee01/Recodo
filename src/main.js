@@ -4,7 +4,9 @@ const todoForm = document.querySelector("#todoForm"),
   todayList = document.querySelector("#todayList"),
   routineList = document.querySelector("#routineList"),
   startSector = document.querySelector("#startSector"),
-  recordWarning = document.querySelector("#recordWarning");
+  recordWarning = document.querySelector("#recordWarning"),
+  timelineBtn = document.querySelector("#timelineBtn"),
+  chartBtn = document.querySelector("#chartBtn");
 let todoLs = [];
 let todoId = 0;
 let routineLs = [];
@@ -391,7 +393,22 @@ function getTime() {
   secondText.innerText = `${second < 10 ? `0${second}` : second}`;
 }
 
+function showChart() {
+  chartBtn.style.height = "42px";
+  chartBtn.style.top = "130px";
+  timelineBtn.style.height = "28px";
+  timelineBtn.style.top = "144px";
+}
+function showtimeline() {
+  chartBtn.style.height = "28px";
+  chartBtn.style.top = "144px";
+  timelineBtn.style.height = "42px";
+  timelineBtn.style.top = "130px";
+}
+
 function init() {
+  chartBtn.addEventListener("click", showChart);
+  timelineBtn.addEventListener("click", showtimeline);
   todoForm.addEventListener("submit", todoSubmitHandler);
   loadTodoLS();
   loadRoutineLs();
