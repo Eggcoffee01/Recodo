@@ -1,418 +1,749 @@
-const todoForm = document.querySelector("#todoForm"),
-  todoInput = document.querySelector("#todoInput"),
-  todoWarning = document.querySelector("#todoWarning"),
-  todayList = document.querySelector("#todayList"),
-  routineList = document.querySelector("#routineList"),
-  startSector = document.querySelector("#startSector"),
-  recordWarning = document.querySelector("#recordWarning"),
-  timelineBtn = document.querySelector("#timelineBtn"),
-  chartBtn = document.querySelector("#chartBtn");
-let todoLs = [];
-let todoId = 0;
-let routineLs = [];
-let routineId = 0;
-let startTimer;
-let recordLs;
-let recordingTime = 0;
-let recordedTime = [];
-
-function todoSubmitHandler(e) {
-  e.preventDefault();
-  const currentTodo = todoInput.value;
-  if (currentTodo.length > 15) {
-    todoWarning.innerText = "Name must be 15 characters or less";
-    todoWarn();
-  } else if (currentTodo) {
-    addTodo(currentTodo, 0);
-    todoInput.value = "";
-  } else {
-    todoWarning.innerText = "Let us know your todo";
-    todoWarn();
-  }
+@font-face {
+  font-family: "Binggrae";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Binggrae.woff")
+    format("woff");
+}
+* {
+  font-family: "Binggrae";
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
-function todoWarn() {
-  todoWarning.style.display = "inline";
-  setTimeout(todoWarningDispappear, 3000);
-}
-function todoWarningDispappear() {
-  todoWarning.style.display = "none";
-}
-
-function saveTodoLs() {
-  const stringTodoLs = JSON.stringify(todoLs);
-  ls.setItem("todos", stringTodoLs);
+.logo {
+  top: 30px;
+  left: 1495px;
+  width: 165px;
+  height: 40px;
 }
 
-function loadTodoLS() {
-  const loadedTodos = JSON.parse(ls.getItem("todos"));
-  if (loadedTodos) {
-    loadedTodos.forEach((element) => {
-      addTodo(element.text, element.clicked);
-    });
-  }
+.bg {
+  top: 0px;
+  left: 0px;
+  z-index: -2;
 }
 
-function addTodo(text, clicked) {
-  const id = todoId++;
-  const li = document.createElement("li"),
-    textSpan = document.createElement("span"),
-    checkImg = document.createElement("img"),
-    moveImg = document.createElement("img"),
-    deleteImg = document.createElement("img"),
-    hr = document.createElement("hr");
-  li.id = id;
-  textSpan.innerText = text;
-  textSpan.id = "textSpan";
-  if (clicked === 0) {
-    checkImg.src = "src/resources/todoBeforeCheck.png";
-  } else {
-    checkImg.src = "src/resources/todoAfterCheck.png";
-    textSpan.classList.toggle("clicked");
-  }
-  checkImg.addEventListener("click", clickTodo);
-  checkImg.id = "check";
-  moveImg.src = "src/resources/pointUnder.png";
-  moveImg.id = "moveUnder";
-  moveImg.addEventListener("click", moveToRoutine);
-  deleteImg.addEventListener("click", deleteTodo);
-  deleteImg.src = "src/resources/todoDelete.png";
-  deleteImg.id = "delete";
-  li.appendChild(checkImg);
-  li.appendChild(textSpan);
-  li.appendChild(moveImg);
-  li.appendChild(deleteImg);
-  li.appendChild(hr);
-  todayList.appendChild(li);
-
-  const todoObject = {
-    text,
-    id,
-    clicked,
-  };
-  todoLs.push(todoObject);
-  saveTodoLs();
+.opacity {
+  top: 0px;
+  left: 0px;
+  z-index: -1;
+  background: #000000 0% 0% no-repeat padding-box;
+  opacity: 0.2;
 }
 
-function clickTodo(e) {
-  const parent = e.target.parentNode;
-  const textSpan = parent.querySelector("span");
-  textSpan.classList.toggle("clicked");
-  const id = parent.id;
-  const idx = todoLs.findIndex(function (item) {
-    return item.id == id;
-  });
-  if (todoLs[idx].clicked == 0) {
-    e.target.src = "src/resources/todoAfterCheck.png";
-    todoLs[idx].clicked = 1;
-  } else {
-    e.target.src = "src/resources/todoBeforeCheck.png";
-    todoLs[idx].clicked = 0;
-  }
-  saveTodoLs();
+#greet {
+  top: 451px;
+  left: 763px;
+  width: 394px;
+  height: 40px;
+  text-align: center;
+  font: normal normal normal 30px/40px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
 }
 
-function deleteTodo(e) {
-  const selectedList = e.target.parentNode;
-  const selectedId = selectedList.id;
-  todayList.removeChild(selectedList);
-  const idx = todoLs.findIndex(function (item) {
-    return item.id == selectedId;
-  });
-  todoLs.splice(idx, 1);
-  saveTodoLs();
+#nameWarningOne {
+  display: none;
+  top: 497px;
+  left: 768px;
+  width: 148px;
+  height: 16px;
+  text-align: center;
+  font: normal normal normal 12px/16px Binggrae;
+  letter-spacing: 0px;
+  color: #ff3b3b;
+  opacity: 1;
+}
+#nameWarningTwo {
+  display: none;
+  top: 497px;
+  left: 730px;
+  width: 290px;
+  height: 16px;
+  text-align: center;
+  font: normal normal normal 12px/16px Binggrae;
+  letter-spacing: 0px;
+  color: #ff3b3b;
+  opacity: 1;
 }
 
-function moveToRoutine(e) {
-  const parent = e.target.parentNode;
-  const text = parent.querySelector("span").innerText;
-  addRountine(text);
-  deleteTodo(e);
+#nameInput {
+  top: 519px;
+  left: 763px;
+  width: 394px;
+  height: 50px;
+  border: 1px solid #ffffff;
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.2) 0% 0% no-repeat padding-box;
+  text-align: center;
+  font: normal normal normal 18px/24px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
 }
 
-function deleteRoutine(e) {
-  const selectedList = e.target.parentNode;
-  const selectedId = selectedList.id;
-  routineList.removeChild(selectedList);
-  const idx = routineLs.findIndex(function (item) {
-    return item.id == selectedId;
-  });
-  routineLs.splice(idx, 1);
-  saveRoutineLs();
+::placeholder {
+  text-align: center;
+  font: normal normal normal 18px/24px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 0.6;
 }
 
-function addRountine(text) {
-  const id = routineId++;
-  const li = document.createElement("li"),
-    textSpan = document.createElement("span"),
-    upImg = document.createElement("img"),
-    startImg = document.createElement("img"),
-    hr = document.createElement("hr");
-  li.id = id;
-  textSpan.innerText = text;
-  textSpan.id = "routineTextSpan";
-  upImg.src = "src/resources/pointOver.png";
-  upImg.id = "moveOver";
-  upImg.addEventListener("click", moveToTodo);
-  startImg.src = "src/resources/start.png";
-  startImg.id = "start";
-  startImg.addEventListener("click", startRecord);
-  li.appendChild(textSpan);
-  li.appendChild(upImg);
-  li.appendChild(startImg);
-  li.appendChild(hr);
-  routineList.appendChild(li);
-  const routineObject = {
-    text,
-    id,
-  };
-  routineLs.push(routineObject);
-  saveRoutineLs();
+#nameBtn {
+  top: 592px;
+  left: 907px;
+  width: 106px;
+  height: 24px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border-radius: 5px;
+  opacity: 1;
+  font: normal normal normal 14px/19px Binggrae;
+  letter-spacing: 0px;
+  color: #1e1e1e;
+  opacity: 1;
 }
 
-function moveToTodo(e) {
-  const parent = e.target.parentNode;
-  const text = parent.querySelector("span").innerText;
-  addTodo(text, 0);
-  deleteRoutine(e);
-}
-function saveRoutineLs() {
-  const stringRoutineLs = JSON.stringify(routineLs);
-  ls.setItem("routines", stringRoutineLs);
+#tutorialSector {
+  display: none;
 }
 
-function loadRoutineLs() {
-  const loadedRoutines = JSON.parse(ls.getItem("routines"));
-  if (loadedRoutines) {
-    loadedRoutines.forEach((element) => {
-      addRountine(element.text);
-    });
-  }
+#tutorialOne {
+  display: none;
+}
+#tOneGreet {
+  top: 374px;
+  width: 440px;
+  height: 40px;
+  text-align: center;
+  font: normal normal normal 30px/40px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
 }
 
-function stopRecordWarn() {
-  recordWarning.style.display = "none";
+#tOneBox {
+  top: 432px;
+  left: 690px;
+  width: 540px;
+  height: 300px;
+  border: 1px solid #ffffff;
+  border-radius: 7px;
+  opacity: 1;
 }
 
-function startRecord(e) {
-  if (recordLs) {
-    recordWarning.style.display = "inline";
-    recordWarning.innerText = "You must stop recording first!";
-    setTimeout(stopRecordWarn, 3000);
-  } else {
-    const parent = e.target.parentNode;
-    const text = parent.querySelector("span").innerText;
-    const time = new Date().getTime();
-    recordLs = { text, time, recording: 0 };
-    saveRecordLs();
-    createRecord(0);
-    deleteRoutine(e);
-  }
+#tOneText {
+  top: 126px;
+  left: 104px;
+  width: 332px;
+  height: 48px;
+  text-align: center;
+  font: normal normal normal 18px/24px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+#tOneBtn {
+  top: 260px;
+  left: 217px;
+  width: 106px;
+  height: 24px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border-radius: 5px;
+  opacity: 1;
 }
 
-function saveRecordLs() {
-  const stringRecordLs = JSON.stringify(recordLs);
-  ls.setItem("record", stringRecordLs);
+#tutorialTwo {
+  display: none;
 }
-function loadRecordLs() {
-  const loadedRecording = JSON.parse(ls.getItem("recording"));
-  const loadedRecord = JSON.parse(ls.getItem("record"));
-  const loadedRecorded = JSON.parse(ls.getItem("recorded"));
-  if (loadedRecorded) {
-    recordedTime = loadedRecorded;
-  }
-  if (loadedRecording) {
-    recordingTime += loadedRecording;
-  }
-  if (loadedRecord) {
-    recordLs = loadedRecord;
-    createRecord(recordLs.recording);
-  }
+#tTwoGreet {
+  top: 374px;
+  left: 799px;
+  width: 322px;
+  height: 40px;
+  text-align: center;
+  font: normal normal normal 30px/40px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
 }
-function createRecord(recordingNull) {
-  if (recordedTime && recordingTime == 0) {
-    for (let i = 0; i < recordedTime.length; i++) {
-      console.log(recordedTime[i].text, recordLs.text);
-      if (recordedTime[i].text === recordLs.text) {
-        recordingTime = recordedTime[i].time;
-        ls.setItem("recording", recordingTime);
-        recordedTime.splice(i, 1);
-      }
-    }
-    const stringRecordedLs = JSON.stringify(recordedTime);
-    ls.setItem("recorded", stringRecordedLs);
-  }
-  const span = document.createElement("span"),
-    textSpan = document.createElement("span"),
-    stopImg = document.createElement("img"),
-    recordImg = document.createElement("img"),
-    H = document.createElement("span"),
-    M = document.createElement("span"),
-    S = document.createElement("span"),
-    hourText = document.createElement("span"),
-    minuteText = document.createElement("span"),
-    secondText = document.createElement("span");
-  textSpan.innerText = recordLs.text;
-  textSpan.id = "recordTextSpan";
-  recordImg.id = "routineImg";
-  recordImg.src = "src/resources/gotoRoutine.png";
-  recordImg.addEventListener("click", recordToRoutine);
-  H.id = "H";
-  H.innerText = "H";
-  M.id = "M";
-  M.innerText = "M";
-  S.id = "S";
-  S.innerText = "S";
-  hourText.id = "hourText";
-  minuteText.id = "minuteText";
-  secondText.id = "secondText";
-  span.appendChild(hourText);
-  span.appendChild(minuteText);
-  span.appendChild(secondText);
-  if (recordingNull == 1) {
-    stopImg.id = "startImg";
-    stopImg.src = "src/resources/start.png";
-    stopImg.addEventListener("click", startHandler);
-  } else {
-    stopImg.id = "stopImg";
-    stopImg.src = "src/resources/stop.png";
-    stopImg.addEventListener("click", stopHandler);
-    startTiming();
-  }
-  span.appendChild(textSpan);
-  span.appendChild(stopImg);
-  span.appendChild(recordImg);
-  span.appendChild(H);
-  span.appendChild(M);
-  span.appendChild(S);
-  startSector.appendChild(span);
-  setTime(recordingNull);
+#tTwoBox {
+  top: 432px;
+  left: 690px;
+  width: 540px;
+  height: 300px;
+  border: 1px solid #ffffff;
+  border-radius: 7px;
+  opacity: 1;
 }
 
-function recordToRoutine(e) {
-  stopTiming();
-  const parent = e.target.parentNode;
-  const text = parent.querySelector("#recordTextSpan").innerText;
-  addRountine(text);
-  startSector.removeChild(parent);
-  if (recordLs.recording == 0) {
-    recordingTime += new Date().getTime() - recordLs.time;
-  }
-  const recordedObject = {
-    text,
-    time: recordingTime,
-  };
-  console.log(recordedObject);
-  recordedTime.push(recordedObject);
-  recordedSort();
-  const stringRecordedLs = JSON.stringify(recordedTime);
-  ls.setItem("recorded", stringRecordedLs);
-  recordLs = "";
-  saveRecordLs();
-  recordingTime = 0;
-  ls.setItem("recording", recordingTime);
-}
-function recordedSort() {
-  let indexPlus = 0;
-  try {
-    for (let i = 0; i < recordedTime.length; i++) {
-      for (let j = i; j < recordedTime.length - 1; j++) {
-        if (recordedTime[i].text == recordedTime[j + 1].text) {
-          recordedTime[i].time += recordedTime[j + 1].time;
-          recordedTime.splice(j + 1, 1);
-          j--;
-          ++indexPlus;
-        }
-      }
-    }
-  } catch (e) {}
-}
-function startHandler(e) {
-  const parent = e.target.parentNode;
-  const stopImg = document.createElement("img");
-  stopImg.id = "stopImg";
-  stopImg.src = "src/resources/stop.png";
-  stopImg.addEventListener("click", stopHandler);
-  parent.removeChild(e.target);
-  parent.appendChild(stopImg);
-  recordLs.time = new Date().getTime();
-  recordLs.recording = 0;
-  saveRecordLs();
-  startTiming();
-}
-function stopHandler(e) {
-  const parent = e.target.parentNode;
-  const startImg = document.createElement("img");
-  startImg.id = "startImg";
-  startImg.src = "src/resources/start.png";
-  startImg.addEventListener("click", startHandler);
-  parent.removeChild(e.target);
-  parent.appendChild(startImg);
-  recordingTime += new Date().getTime() - recordLs.time;
-  ls.setItem("recording", recordingTime);
-  recordLs.recording = 1;
-  recordLs.time = 0;
-  saveRecordLs();
-  stopTiming();
-  setTime(1);
-}
-function startTiming() {
-  startTimer = setInterval(getTime, 1000);
-}
-function stopTiming() {
-  clearInterval(startTimer);
-}
-function setTime(timeNull) {
-  let recordedSetTime;
-  if (timeNull == 1) {
-    recordedSetTime = recordingTime;
-  } else {
-    recordedSetTime = new Date().getTime() - recordLs.time + recordingTime;
-  }
-  const hourText = document.querySelector("#hourText"),
-    minuteText = document.querySelector("#minuteText"),
-    secondText = document.querySelector("#secondText"),
-    hour = Math.floor(recordedSetTime / 3600000),
-    minite = Math.floor((recordedSetTime % 3600000) / 60000),
-    second = Math.floor((recordedSetTime % 60000) / 1000);
-  hourText.innerText = `${hour < 10 ? `0${hour}` : hour}`;
-  minuteText.innerText = `${minite < 10 ? `0${minite}` : minite}`;
-  secondText.innerText = `${second < 10 ? `0${second}` : second}`;
+#tTwoBtn {
+  top: 260px;
+  left: 217px;
+  width: 106px;
+  height: 24px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border-radius: 5px;
+  opacity: 1;
+  text-align: center;
+  font: normal normal normal 14px/19px Binggrae;
+  letter-spacing: 0px;
+  color: #1e1e1e;
 }
 
-function getTime() {
-  const hourText = document.querySelector("#hourText"),
-    minuteText = document.querySelector("#minuteText"),
-    secondText = document.querySelector("#secondText"),
-    recordedSetTime = new Date().getTime() - recordLs.time + recordingTime,
-    hour = Math.floor(recordedSetTime / 3600000),
-    minite = Math.floor((recordedSetTime % 3600000) / 60000),
-    second = Math.floor((recordedSetTime % 60000) / 1000);
-  hourText.innerText = `${hour < 10 ? `0${hour}` : hour}`;
-  minuteText.innerText = `${minite < 10 ? `0${minite}` : minite}`;
-  secondText.innerText = `${second < 10 ? `0${second}` : second}`;
+.addIcon {
+  top: 477px;
+  left: 726px;
+  width: 107px;
+  height: 93px;
+  background: transparent 0% 0% no-repeat padding-box;
+  opacity: 1;
 }
 
-function showChart() {
-  chartBtn.style.height = "42px";
-  chartBtn.style.top = "130px";
-  timelineBtn.style.height = "28px";
-  timelineBtn.style.top = "144px";
-}
-function showtimeline() {
-  chartBtn.style.height = "28px";
-  chartBtn.style.top = "144px";
-  timelineBtn.style.height = "42px";
-  timelineBtn.style.top = "130px";
+.recordIcon {
+  top: 479px;
+  left: 913px;
+  width: 94px;
+  height: 89px;
+  background: transparent 0% 0% no-repeat padding-box;
+  opacity: 1;
 }
 
-function init() {
-  chartBtn.addEventListener("click", showChart);
-  timelineBtn.addEventListener("click", showtimeline);
-  todoForm.addEventListener("submit", todoSubmitHandler);
-  loadTodoLS();
-  loadRoutineLs();
-  loadRecordLs();
+.checkIcon {
+  top: 476px;
+  left: 1102px;
+  width: 75px;
+  height: 95px;
+  background: transparent 0% 0% no-repeat padding-box;
+  opacity: 1;
 }
 
-init();
+#addTextBox {
+  top: 173px;
+  left: 58px;
+  width: 64px;
+  height: 25px;
+  border: 1px solid #ffffff;
+  border-radius: 13px;
+  opacity: 1;
+}
+#addText {
+  top: 175px;
+  left: 73px;
+  width: 34px;
+  height: 21px;
+  text-align: center;
+  font: normal normal normal 16px/21px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+#recordTextBox {
+  top: 173px;
+  left: 220px;
+  width: 100px;
+  height: 25px;
+  border: 1px solid #ffffff;
+  border-radius: 13px;
+  opacity: 1;
+}
+#recordText {
+  top: 175px;
+  left: 235px;
+  width: 70px;
+  height: 21px;
+  text-align: center;
+  font: normal normal normal 16px/21px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+#checkTextBox {
+  top: 173px;
+  left: 407px;
+  width: 86px;
+  height: 25px;
+  border: 1px solid #ffffff;
+  border-radius: 13px;
+  opacity: 1;
+}
+#checkText {
+  top: 175px;
+  left: 422px;
+  width: 56px;
+  height: 21px;
+  text-align: center;
+  font: normal normal normal 16px/21px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+#addExplain {
+  top: 206px;
+  left: 28px;
+  width: 125px;
+  height: 38px;
+  text-align: center;
+  font: normal normal normal 14px/19px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+#recordExplain {
+  top: 206px;
+  left: 213px;
+  width: 114px;
+  height: 38px;
+  text-align: center;
+  font: normal normal normal 14px/19px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+#checkExplain {
+  top: 206px;
+  left: 375px;
+  width: 155px;
+  height: 38px;
+  text-align: center;
+  font: normal normal normal 14px/19px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+#mainSector {
+  display: none;
+}
+
+#clock {
+  top: 280px;
+  left: 781px;
+  width: 358px;
+  height: 107px;
+  text-align: center;
+  font: normal normal bold 80px/107px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+#sayHi {
+  top: 407px;
+  left: 760px;
+  width: 400px;
+  height: 37px;
+  text-align: center;
+  font: normal normal normal 28px/37px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+#locationText {
+  top: 456px;
+  height: 27px;
+  text-align: center;
+  font: normal normal normal 20px/27px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+#locationBox {
+  top: 454px;
+  height: 31px;
+  border: 1px solid #ffffff;
+  border-radius: 18px;
+  opacity: 1;
+}
+#locationLogo {
+  z-index: 3;
+  top: 460px;
+  width: 12px;
+  height: 16px;
+  background: transparent 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+
+#inputGreet {
+  top: 565px;
+  left: 809px;
+  width: 302px;
+  height: 40px;
+  text-align: center;
+  font: normal normal normal 30px/40px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+#todoForm {
+  top: 623px;
+  left: 690px;
+}
+
+#todoWarning {
+  top: 603px;
+  left: 700px;
+  width: 290px;
+  height: 16px;
+  text-align: left;
+  font: normal normal normal 12px/16px Binggrae;
+  letter-spacing: 0px;
+  color: #ff3b3b;
+  opacity: 1;
+}
+
+#todoForm hr {
+  left: 1px;
+  width: 540px;
+  border-bottom: 0.1px solid #ffffff;
+  top: 75px;
+}
+#todoInput {
+  width: 540px;
+  height: 50px;
+  border: 1px solid #ffffff;
+  border-radius: 7px;
+  background-color: rgba(0, 0, 0, 0);
+  text-align: center;
+  font: normal normal normal 18px/24px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 0.6;
+}
+
+#todayTitleBox {
+  top: 130px;
+  left: 260px;
+  width: 332px;
+  height: 42px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border-radius: 8px 8px 0px 0px;
+  opacity: 1;
+}
+
+#todayTitleText {
+  top: 8px;
+  left: 133px;
+  width: 64px;
+  height: 27px;
+  text-align: center;
+  font: normal normal bold 20px/27px Binggrae;
+  letter-spacing: 0px;
+  color: #434343;
+  opacity: 1;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #ffffff;
+  background-clip: padding-box;
+  border-left: 5px solid transparent;
+  border-bottom-right-radius: 5px;
+}
+
+#routineList {
+  overflow: auto;
+  position: relative;
+  list-style: none;
+  top: 554px;
+  left: 260px;
+  width: 330px;
+  height: 430px;
+  border: 1px solid #ffffff;
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  opacity: 1;
+}
+#routineList li {
+  left: 20px;
+  width: 290px;
+  height: 21px;
+  position: relative;
+  top: 10px;
+  margin: 0;
+  margin-bottom: 20px;
+}
+#todayList {
+  overflow: auto;
+  position: relative;
+  list-style: none;
+  top: 172px;
+  left: 260px;
+  width: 330px;
+  height: 300px;
+  border: 1px solid #ffffff;
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  opacity: 1;
+}
+#todayList li {
+  left: 20px;
+  width: 290px;
+  height: 21px;
+  position: relative;
+  top: 10px;
+  margin: 0;
+  margin-bottom: 20px;
+}
+li hr {
+  top: 31px;
+  width: 290px;
+  border-bottom: 0.1px solid #ffffff;
+}
+
+#textSpan {
+  left: 26px;
+  width: 123px;
+  height: 21px;
+  text-align: left;
+  font: normal normal normal 16px/21px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+#routineTextSpan {
+  width: 123px;
+  height: 21px;
+  text-align: left;
+  font: normal normal normal 16px/21px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+#moveOver {
+  top: 3px;
+  left: 244px;
+  width: 16px;
+  height: 15px;
+  background: transparent 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+#start {
+  top: 3px;
+  left: 276px;
+  width: 15px;
+  height: 18px;
+  background: transparent 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+#check {
+  top: 3px;
+  width: 16px;
+  height: 16px;
+  background: transparent 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+#moveUnder {
+  top: 3px;
+  left: 244px;
+  width: 16px;
+  height: 15px;
+  background: transparent 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+#delete {
+  top: 4px;
+  left: 276px;
+  width: 14px;
+  height: 14px;
+  background: transparent 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+
+#routineTitleBox {
+  top: 512px;
+  left: 260px;
+  width: 333px;
+  height: 42px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border-radius: 8px 8px 0px 0px;
+  opacity: 1;
+}
+
+#routineTitleText {
+  top: 8px;
+  left: 125px;
+  width: 80px;
+  height: 27px;
+  text-align: center;
+  font: normal normal bold 20px/27px Binggrae;
+  letter-spacing: 0px;
+  color: #434343;
+  opacity: 1;
+}
+
+#recordWarning {
+  top: 700px;
+  left: 690px;
+  width: 290px;
+  height: 16px;
+  text-align: left;
+  font: normal normal normal 12px/16px Binggrae;
+  letter-spacing: 0px;
+  color: #ff3b3b;
+  opacity: 1;
+}
+
+#recordTextSpan {
+  top: 713px;
+  left: 690px;
+  width: 540px;
+  height: 48px;
+  text-align: center;
+  font: normal normal normal 36px/48px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+#stopImg {
+  top: 849px;
+  left: 970px;
+  width: 50px;
+  height: 50px;
+  background: transparent 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+#startImg {
+  top: 849px;
+  left: 970px;
+  width: 50px;
+  height: 50px;
+  background: transparent 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+#routineImg {
+  top: 849px;
+  left: 900px;
+  width: 50px;
+  height: 50px;
+  background: transparent 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+
+#H {
+  top: 820px;
+  left: 915px;
+  width: 10px;
+  height: 19px;
+  text-align: left;
+  font: normal normal normal 14px/19px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 0.8;
+}
+#M {
+  top: 820px;
+  left: 978px;
+  width: 13px;
+  height: 19px;
+  text-align: left;
+  font: normal normal normal 14px/19px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 0.8;
+}
+#S {
+  top: 820px;
+  left: 1042px;
+  width: 8px;
+  height: 19px;
+  text-align: left;
+  font: normal normal normal 14px/19px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 0.8;
+}
+
+#hourText {
+  top: 799px;
+  left: 870px;
+  width: 41px;
+  height: 40px;
+  text-align: left;
+  font: normal normal normal 30px/40px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+#minuteText {
+  top: 799px;
+  left: 935px;
+  width: 39px;
+  height: 40px;
+  text-align: left;
+  font: normal normal normal 30px/40px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+#secondText {
+  top: 799px;
+  left: 1001px;
+  width: 37px;
+  height: 40px;
+  text-align: left;
+  font: normal normal normal 30px/40px Binggrae;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+}
+#tCBox {
+  top: 172px;
+  left: 1330px;
+  width: 330px;
+  height: 812px;
+  border: 1px solid #ffffff;
+  border-radius: 0px 0px 8px 8px;
+  opacity: 1;
+}
+
+#timelineBtn {
+  top: 130px;
+  left: 1330px;
+  width: 166px;
+  height: 42px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border-radius: 5px 5px 0px 0px;
+  text-align: center;
+  font: normal normal normal 14px/19px Binggrae;
+  letter-spacing: 0px;
+  color: #1e1e1e;
+  opacity: 1;
+}
+
+#chartBtn {
+  top: 144px;
+  left: 1496px;
+  width: 166px;
+  height: 28px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border-radius: 5px 5px 0px 0px;
+  text-align: center;
+  font: normal normal normal 14px/19px Binggrae;
+  letter-spacing: 0px;
+  color: #1e1e1e;
+  opacity: 0.9;
+}
+
+.clicked {
+  text-decoration-line: line-through;
+}
+
+#todaySector {
+  width: 0;
+  height: 0;
+}
+#routineSector {
+  width: 0;
+  height: 0;
+}
