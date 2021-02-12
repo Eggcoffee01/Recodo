@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Tab</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <span id="greetSector">
+      <span id="greet">Hello, what's your name?</span>
+      <span id="nameWarningOne">Please enter your name</span>
+      <span id="nameWarningTwo">Name must be 7 characters or less</span>
+      <form id="nameForm">
+        <input id="nameInput" type="text" placeholder="ex)james, ji hoon" />
+        <button id="nameBtn">submit</button>
+      </form>
+    </span>
+    <span id="tutorialSector">
+      <span id="tutorialOne">
+        <span id="tOneGreet"></span>
+        <span id="tOneBox">
+          <span id="tOneText">
+            Recodo is a web service that helps you to focus and check yourself!
+          </span>
+          <button id="tOneBtn">next</button>
+        </span>
+      </span>
+      <span id="tutorialTwo">
+        <span id="tTwoGreet">How to use, recodo?</span>
+        <span id="tTwoBox">
+          <span id="addTextBox"></span>
+          <span id="addText">ADD</span>
+          <span id="addExplain">you can add routine and todo</span>
+          <span id="recordTextBox"></span>
+          <span id="recordText">RECORD</span>
+          <span id="recordExplain">you can record your routine</span>
+          <span id="checkTextBox"></span>
+          <span id="checkText">CHECK</span>
+          <span id="checkExplain"
+            >you can check <br />
+            what you did today!
+          </span>
+          <button id="tTwoBtn">next</button>
+        </span>
+      </span>
+    </span>
+    <span id="mainSector">
+      <span id="clockSector">
+        <span id="clock"></span>
+        <span id="sayHi"></span>
+        <span id="locationText"></span>
+        <span id="locationBox"></span>
+        <img id="locationLogo" />
+      </span>
+      <span id="inputSector">
+        <span id="todoWarning"></span>
+        <span id="inputGreet">What is your todo?</span>
+        <form id="todoForm">
+          <input id="todoInput" type="text" placeholder="ex)Toeic study" />
+          <hr />
+        </form>
+      </span>
+      <span id="todaySector">
+        <span id="todayTitleBox"> <span id="todayTitleText">Today</span></span>
+        <ul id="todayList"></ul>
+      </span>
+      <span id="routineSector">
+        <span id="routineTitleBox"
+          ><span id="routineTitleText">Routine</span></span
+        >
+        <ul id="routineList"></ul>
+      </span>
+      <span id="startSector"> <span id="recordWarning"></span> </span>
+      <span id="timelineChartSector">
+        <button id="timelineBtn">Timeline</button>
+        <button id="chartBtn">Chart</button>
+        <span id="tCBox"> </span>
+      </span>
+    </span>
+
+    <script src="src/bg.js"></script>
+    <script src="src/greeting.js"></script>
+    <script src="src/clock.js"></script>
+    <script src="src/location.js"></script>
+    <script src="src/main.js"></script>
+  </body>
+</html>
