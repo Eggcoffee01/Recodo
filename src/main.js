@@ -514,11 +514,9 @@ function loadDate() {
 }
 
 function checkRoutineChart() {
-  const allChild = chartRoutineList.childNodes;
-  allChild.forEach(function (e) {
-    chartRoutineList.removeChild(e);
-  });
-
+  while (chartRoutineList.firstChild) {
+    chartRoutineList.removeChild(chartRoutineList.lastChild);
+  }
   if (recordedTime) {
     currentDate = parseInt(ls.getItem("date"));
     const usedRecodoTime = new Date().getTime() - currentDate;
